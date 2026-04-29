@@ -21,20 +21,25 @@ export function AdBanner({
   fullWidthResponsive = true,
   className = '',
 }: AdBannerProps) {
+  const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
+
   useEffect(() => {
+    if (!clientId) return
     try {
       ;(window.adsbygoogle = window.adsbygoogle || []).push({})
     } catch (err) {
       console.error('AdSense error:', err)
     }
-  }, [])
+  }, [clientId])
+
+  if (!clientId) return null
 
   return (
     <div className={className}>
       <ins
         className='adsbygoogle'
         style={{ display: 'block' }}
-        data-ad-client='ca-pub-3842960431278714'
+        data-ad-client={clientId}
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive={String(fullWidthResponsive)}

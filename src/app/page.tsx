@@ -5,8 +5,11 @@ import { appReducer, initialState } from '@/lib/appReducer'
 import {
   TikTokIcon,
   TwitterXIcon,
-  PortfolioIcon,
-  GitHubIcon,
+  YouTubeIcon,
+  FacebookIcon,
+  InstagramIcon,
+  CapCutIcon,
+
   SpinnerIcon,
   DownloadIcon,
   MusicIcon,
@@ -374,45 +377,44 @@ export default function Home() {
         <div className='text-center mb-6 md:mb-8'>
           {' '}
           <div className='flex justify-center mb-4'>
-            <div className='flex items-center space-x-3'>
-              <div className='w-10 h-10 md:w-12 md:h-12 bg-[#010101] rounded-full flex items-center justify-center ring-2 ring-white/20'>
-                <TikTokIcon className='w-5 h-5 md:w-6 md:h-6 text-white' />
+            <div className='flex items-center space-x-2 md:space-x-3'>
+              <div className='w-9 h-9 md:w-11 md:h-11 bg-[#010101] rounded-full flex items-center justify-center ring-2 ring-white/20 hover:scale-110 transition-transform' title='TikTok'>
+                <TikTokIcon className='w-4 h-4 md:w-5 md:h-5 text-white' />
               </div>
-              <div className='w-10 h-10 md:w-12 md:h-12 bg-black rounded-full flex items-center justify-center ring-2 ring-white/20'>
-                <TwitterXIcon className='w-5 h-5 md:w-6 md:h-6 text-white' />
+              <div className='w-9 h-9 md:w-11 md:h-11 bg-[#FF0000] rounded-full flex items-center justify-center ring-2 ring-white/20 hover:scale-110 transition-transform' title='YouTube'>
+                <YouTubeIcon className='w-4 h-4 md:w-5 md:h-5 text-white' />
+              </div>
+              <div className='w-9 h-9 md:w-11 md:h-11 bg-gradient-to-br from-[#f09433] via-[#dc2743] to-[#bc1888] rounded-full flex items-center justify-center ring-2 ring-white/20 hover:scale-110 transition-transform' title='Instagram'>
+                <InstagramIcon className='w-4 h-4 md:w-5 md:h-5 text-white' />
+              </div>
+              <div className='w-9 h-9 md:w-11 md:h-11 bg-[#1877F2] rounded-full flex items-center justify-center ring-2 ring-white/20 hover:scale-110 transition-transform' title='Facebook'>
+                <FacebookIcon className='w-4 h-4 md:w-5 md:h-5 text-white' />
+              </div>
+              <div className='w-9 h-9 md:w-11 md:h-11 bg-black rounded-full flex items-center justify-center ring-2 ring-white/20 hover:scale-110 transition-transform' title='Twitter/X'>
+                <TwitterXIcon className='w-4 h-4 md:w-5 md:h-5 text-white' />
+              </div>
+              <div className='w-9 h-9 md:w-11 md:h-11 bg-[#00E5FF] rounded-full flex items-center justify-center ring-2 ring-white/20 hover:scale-110 transition-transform' title='CapCut'>
+                <CapCutIcon className='w-4 h-4 md:w-5 md:h-5 text-black' />
               </div>
             </div>
           </div>
           <h1 className='text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2'>
-            Social Media Downloader
+            Trình Tải Video Đa Nền Tảng
           </h1>{' '}
           <p className='text-sm md:text-base text-white/70 mb-4'>
-            Download videos without watermarks, extract MP3 audio, or save
-            images from TikTok &amp; Twitter/X
+            Tải video từ TikTok, YouTube, Instagram, Facebook, Twitter/X &amp; CapCut — không logo, chất lượng HD
           </p>
-          {/* Developer Links */}
-          <div className='flex justify-center items-center space-x-4'>
-            {' '}
+          {/* Admin Link */}
+          <div className='flex justify-center items-center mb-6'>
             <a
-              href='https://www.mohamedgado.com/'
+              href='https://facebook.com/kzi207'
               target='_blank'
               rel='noopener noreferrer'
-              className='group flex items-center space-x-2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 border border-white/20 hover:border-white/40'
+              className='group flex items-center space-x-2 px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 rounded-full transition-all duration-200 border border-blue-500/30 hover:border-blue-500/50'
             >
-              <PortfolioIcon className='w-4 h-4 text-white/70 group-hover:text-white transition-colors' />
-              <span className='text-white/70 group-hover:text-white text-sm font-medium transition-colors'>
-                Portfolio
-              </span>
-            </a>{' '}
-            <a
-              href='https://github.com/Vette1123/tiktok-downloader'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='group flex items-center space-x-2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 border border-white/20 hover:border-white/40'
-            >
-              <GitHubIcon className='w-4 h-4 text-white/70 group-hover:text-white transition-colors' />
-              <span className='text-white/70 group-hover:text-white text-sm font-medium transition-colors'>
-                GitHub
+              <div className='w-2 h-2 bg-blue-400 rounded-full animate-pulse'></div>
+              <span className='text-blue-200 group-hover:text-white text-sm font-medium transition-colors'>
+                Admin: facebook.com/kzi207
               </span>
             </a>
           </div>
@@ -430,7 +432,7 @@ export default function Home() {
             <div>
               <input
                 type='text'
-                placeholder='Paste a TikTok or Twitter/X URL...'
+                placeholder='Dán link TikTok, YouTube, IG, FB, X, hoặc CapCut tại đây...'
                 value={state.url}
                 onChange={(e) =>
                   dispatch({ type: 'SET_URL', payload: e.target.value })
@@ -438,6 +440,7 @@ export default function Home() {
                 className='w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm md:text-base'
               />
             </div>
+            <AdBanner slot='1234567890' className='my-2' />
             {/* Download Type Selection */}
             {/* <div className='flex space-x-2'>
               <button
@@ -556,13 +559,13 @@ export default function Home() {
                 <div className='bg-gradient-to-br from-white/5 to-white/10 rounded-xl p-6 border border-white/20'>
                   <div className='text-center'>
                     <div className='w-16 h-16 bg-gradient-to-r from-pink-500/20 to-violet-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-pink-500/30'>
-                      <TikTokIcon className='w-8 h-8 text-pink-400' />
+                      <DownloadIcon className='w-8 h-8 text-pink-400' />
                     </div>
                     <h3 className='text-white font-semibold text-lg mb-2'>
                       Ready to Download?
                     </h3>
                     <p className='text-white/70 text-sm mb-4'>
-                      Paste a TikTok or Twitter/X URL above to get started!
+                      Paste a URL from TikTok, YouTube, Instagram, Facebook, Twitter/X, or CapCut!
                     </p>
                   </div>
                 </div>
@@ -583,7 +586,7 @@ export default function Home() {
                           Copy a Video URL
                         </p>
                         <p className='text-white/60 text-xs'>
-                          From TikTok or Twitter/X
+                          From any supported platform
                         </p>
                       </div>
                     </div>
@@ -620,14 +623,15 @@ export default function Home() {
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                   <div className='bg-white/5 rounded-xl p-4 border border-white/10'>
                     <h4 className='text-white font-medium mb-3 flex items-center'>
-                      📱 Supported Links
+                      📱 Supported Platforms
                     </h4>
                     <div className='space-y-2 text-xs text-white/70'>
-                      <p>• https://www.tiktok.com/@user/video/...</p>
-                      <p>• https://vm.tiktok.com/...</p>
-                      <p>• https://vt.tiktok.com/...</p>
-                      <p>• https://twitter.com/user/status/...</p>
-                      <p>• https://x.com/user/status/...</p>
+                      <p className='flex items-center gap-1.5'><TikTokIcon className='w-3 h-3 text-white/80' /> TikTok — videos, slideshows</p>
+                      <p className='flex items-center gap-1.5'><YouTubeIcon className='w-3 h-3 text-red-400' /> YouTube — videos, shorts</p>
+                      <p className='flex items-center gap-1.5'><InstagramIcon className='w-3 h-3 text-pink-400' /> Instagram — reels, posts</p>
+                      <p className='flex items-center gap-1.5'><FacebookIcon className='w-3 h-3 text-blue-400' /> Facebook — videos, reels</p>
+                      <p className='flex items-center gap-1.5'><TwitterXIcon className='w-3 h-3 text-white/80' /> Twitter/X — tweets, media</p>
+                      <p className='flex items-center gap-1.5'><CapCutIcon className='w-3 h-3 text-cyan-400' /> CapCut — templates</p>
                     </div>
                   </div>
                   <div className='bg-white/5 rounded-xl p-4 border border-white/10'>
@@ -675,26 +679,46 @@ export default function Home() {
                     {state.originalUrl &&
                       (() => {
                         const platform = state.videoMetadata?.platform
-                        const platformConfig = {
+                        const platformConfig: Record<string, { label: string; Icon: React.ComponentType<{ className?: string }>; color: string }> = {
                           tiktok: {
-                            label: 'View on TikTok',
+                            label: 'Xem trên TikTok',
                             Icon: TikTokIcon,
                             color: 'text-pink-400 hover:text-pink-300',
                           },
                           twitter: {
-                            label: 'View on Twitter/X',
+                            label: 'Xem trên Twitter/X',
                             Icon: TwitterXIcon,
                             color: 'text-sky-400 hover:text-sky-300',
                           },
+                          youtube: {
+                            label: 'Xem trên YouTube',
+                            Icon: YouTubeIcon,
+                            color: 'text-red-400 hover:text-red-300',
+                          },
+                          facebook: {
+                            label: 'Xem trên Facebook',
+                            Icon: FacebookIcon,
+                            color: 'text-blue-400 hover:text-blue-300',
+                          },
+                          instagram: {
+                            label: 'Xem trên Instagram',
+                            Icon: InstagramIcon,
+                            color: 'text-pink-400 hover:text-pink-300',
+                          },
+                          capcut: {
+                            label: 'Xem trên CapCut',
+                            Icon: CapCutIcon,
+                            color: 'text-cyan-400 hover:text-cyan-300',
+                          },
                           unknown: {
-                            label: 'View Original',
-                            Icon: TikTokIcon,
+                            label: 'Xem link gốc',
+                            Icon: DownloadIcon,
                             color: 'text-pink-400 hover:text-pink-300',
                           },
                         }
                         const cfg =
-                          platformConfig[platform ?? 'tiktok'] ??
-                          platformConfig.tiktok
+                          platformConfig[platform ?? 'unknown'] ??
+                          platformConfig.unknown
                         return (
                           <a
                             href={state.originalUrl}
@@ -715,7 +739,7 @@ export default function Home() {
                     onClick={togglePreview}
                     className='w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors duration-200 flex items-center justify-center text-sm md:text-base'
                   >
-                    {state.showPreview ? '👁️ Hide Preview' : '👀 Show Preview'}
+                    {state.showPreview ? '👁️ Ẩn Xem Trước' : '👀 Xem Trước Video'}
                   </button>
                 )}{' '}
                 {/* Video Preview */}
@@ -734,15 +758,15 @@ export default function Home() {
                           dispatch({
                             type: 'SET_MESSAGE',
                             payload:
-                              'Preview unavailable, but download should work',
+                              'Không thể xem trước, nhưng bạn vẫn có thể tải xuống',
                           })
                         }}
                       >
-                        Your browser does not support the video tag.
+                        Trình duyệt của bạn không hỗ trợ thẻ video.
                       </video>
                     </div>
                     <p className='text-white/50 text-xs text-center'>
-                      ⚡ Preview loaded — ready to download!
+                      ⚡ Đã tải xem trước — sẵn sàng tải về!
                     </p>
                   </div>
                 )}
@@ -782,8 +806,8 @@ export default function Home() {
                         className='w-full py-2 px-4 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded-lg transition-colors duration-200 flex items-center justify-center text-sm md:text-base'
                       >
                         {state.showImageGallery
-                          ? '🖼️ Hide Images'
-                          : `🖼️ Show Images (${state.videoMetadata.images.length})`}
+                          ? '🖼️ Ẩn Ảnh'
+                          : `🖼️ Xem Ảnh (${state.videoMetadata.images.length})`}
                       </button>
 
                       {state.showImageGallery && (
@@ -791,20 +815,20 @@ export default function Home() {
                           {/* Select All Controls */}
                           <div className='flex items-center justify-between bg-white/5 rounded-lg p-3'>
                             <span className='text-white text-sm'>
-                              Select images to download:
+                              Chọn ảnh để tải xuống:
                             </span>
                             <div className='flex space-x-2'>
                               <button
                                 onClick={() => selectAllImages(true)}
                                 className='px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded'
                               >
-                                All
+                                Tất cả
                               </button>
                               <button
                                 onClick={() => selectAllImages(false)}
                                 className='px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-xs rounded'
                               >
-                                None
+                                Bỏ chọn
                               </button>
                             </div>
                           </div>
@@ -869,7 +893,7 @@ export default function Home() {
 
                                 {/* Hover hint */}
                                 <div className='pointer-events-none absolute bottom-1 left-1 right-1 text-[10px] text-white/80 bg-black/40 rounded px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity text-center'>
-                                  Click to preview
+                                  Click để xem ảnh
                                 </div>
                               </div>
                             ))}{' '}
@@ -894,13 +918,13 @@ export default function Home() {
                                 htmlFor='downloadAsZip'
                                 className='text-white text-sm cursor-pointer'
                               >
-                                Download as ZIP file
+                                Tải xuống dạng file ZIP
                               </label>
                             </div>
                             <p className='text-white/60 text-xs'>
                               {state.downloadImagesAsZip
-                                ? '🗜️ Images will be packaged into a single ZIP file'
-                                : '📸 Images will be downloaded individually'}
+                                ? '🗜️ Các ảnh sẽ được nén vào một file ZIP'
+                                : '📸 Các ảnh sẽ được tải xuống riêng lẻ'}
                             </p>
                           </div>
 
@@ -919,13 +943,13 @@ export default function Home() {
                             {state.downloadingImages ? (
                               <>
                                 <SpinnerIcon className='flex-shrink-0 h-4 w-4 text-white' />
-                                <span>Downloading...</span>
+                                <span>Đang tải...</span>
                               </>
                             ) : (
                               <>
                                 <DownloadIcon className='flex-shrink-0 h-5 w-5 text-white' />
                                 <span>
-                                  Download Selected (
+                                  Tải ảnh đã chọn (
                                   {state.videoMetadata?.images?.filter(
                                     (img) => img.selected,
                                   ).length || 0}
@@ -948,13 +972,15 @@ export default function Home() {
                   const showAudioButton = !!state.audioUrl
                   if (!showVideoButton && !showAudioButton) return null
                   return (
-                    <div
-                      className={`grid gap-3 ${
-                        showVideoButton && showAudioButton
-                          ? 'grid-cols-1 md:grid-cols-2'
-                          : 'grid-cols-1'
-                      }`}
-                    >
+                    <div className='space-y-4'>
+                      <AdBanner slot='2345678901' className='my-2' />
+                      <div
+                        className={`grid gap-3 ${
+                          showVideoButton && showAudioButton
+                            ? 'grid-cols-1 md:grid-cols-2'
+                            : 'grid-cols-1'
+                        }`}
+                      >
                       {showVideoButton && (
                         <button
                           onClick={
@@ -974,8 +1000,8 @@ export default function Home() {
                               <span>
                                 {state.videoMetadata?.isPhotoCarousel &&
                                 !state.downloadUrl
-                                  ? 'Rendering...'
-                                  : 'Downloading...'}
+                                  ? 'Đang xử lý...'
+                                  : 'Đang tải...'}
                               </span>
                             </>
                           ) : (
@@ -983,8 +1009,8 @@ export default function Home() {
                               <DownloadIcon className='flex-shrink-0 h-5 w-5 text-white' />
                               <span>
                                 {state.videoMetadata?.isPhotoCarousel
-                                  ? 'Video (slideshow)'
-                                  : 'Video'}
+                                  ? 'Tải Video (Slideshow)'
+                                  : 'Tải Video'}
                               </span>
                             </>
                           )}
@@ -1003,15 +1029,15 @@ export default function Home() {
                           {state.downloadingAudio ? (
                             <>
                               <SpinnerIcon className='flex-shrink-0 h-4 w-4 text-white' />
-                              <span>Downloading...</span>
+                              <span>Đang tải...</span>
                             </>
                           ) : (
                             <>
                               <MusicIcon className='flex-shrink-0 h-5 w-5 text-white' />
                               <span>
                                 {state.videoMetadata?.isPhotoCarousel
-                                  ? 'Download Audio'
-                                  : 'Extract Audio'}
+                                  ? 'Tải Nhạc'
+                                  : 'Tách Nhạc MP3'}
                               </span>
                             </>
                           )}
@@ -1025,8 +1051,8 @@ export default function Home() {
                     {state.downloading ||
                     state.downloadingAudio ||
                     state.downloadingImages
-                      ? 'Please wait while we prepare your download...'
-                      : 'Click to download your content'}
+                      ? 'Vui lòng đợi trong khi chúng tôi chuẩn bị file tải xuống...'
+                      : 'Nhấn để tải nội dung của bạn'}
                   </p>
                 )}
               </div>
@@ -1036,41 +1062,41 @@ export default function Home() {
         {/* Features List - Mobile only, shown at bottom */}
         <div className='lg:hidden bg-white/5 rounded-xl p-4 mt-6 border border-white/10'>
           <h3 className='text-white font-semibold mb-4 text-sm md:text-base flex items-center'>
-            ✨ Features
+            ✨ Tính Năng
             <div className='ml-2 w-8 h-0.5 bg-gradient-to-r from-pink-500 to-violet-500 rounded'></div>
           </h3>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-3 text-xs md:text-sm'>
             <div className='flex items-center space-x-2 text-white/70'>
               <div className='w-2 h-2 bg-green-400 rounded-full'></div>
-              <span>Watermark-free downloads</span>
+              <span>Tải xuống không logo (Watermark)</span>
             </div>
             <div className='flex items-center space-x-2 text-white/70'>
               <div className='w-2 h-2 bg-blue-400 rounded-full'></div>
-              <span>HD quality preservation</span>
+              <span>Giữ nguyên chất lượng HD</span>
             </div>
             <div className='flex items-center space-x-2 text-white/70'>
               <div className='w-2 h-2 bg-purple-400 rounded-full'></div>
-              <span>MP3 audio extraction</span>
+              <span>Tách nhạc MP3 chất lượng cao</span>
             </div>
             <div className='flex items-center space-x-2 text-white/70'>
               <div className='w-2 h-2 bg-pink-400 rounded-full'></div>
-              <span>Video preview</span>
+              <span>Xem trước video</span>
             </div>
             <div className='flex items-center space-x-2 text-white/70'>
               <div className='w-2 h-2 bg-yellow-400 rounded-full'></div>
-              <span>Image gallery downloads</span>
+              <span>Tải bộ sưu tập ảnh</span>
             </div>
             <div className='flex items-center space-x-2 text-white/70'>
               <div className='w-2 h-2 bg-indigo-400 rounded-full'></div>
-              <span>Multiple URL formats</span>
+              <span>Hỗ trợ nhiều loại link</span>
             </div>
             <div className='flex items-center space-x-2 text-white/70'>
               <div className='w-2 h-2 bg-teal-400 rounded-full'></div>
-              <span>Batch image selection</span>
+              <span>Chọn ảnh hàng loạt</span>
             </div>
             <div className='flex items-center space-x-2 text-white/70'>
               <div className='w-2 h-2 bg-orange-400 rounded-full'></div>
-              <span>Fast processing</span>
+              <span>Xử lý siêu nhanh</span>
             </div>
           </div>
         </div>
@@ -1084,51 +1110,48 @@ export default function Home() {
               id='seo-heading'
               className='text-xl md:text-2xl font-bold text-white mb-3'
             >
-              Free TikTok &amp; Twitter/X Video Downloader
+              Trình Tải Video Đa Nền Tảng Miễn Phí
             </h2>
             <p className='text-sm md:text-base leading-relaxed'>
-              Save any TikTok or Twitter/X post in a couple of clicks. Paste the
-              link, preview the content, and download the full-quality video,
-              the original MP3 soundtrack, or every image from a TikTok photo
-              carousel. Everything happens in your browser — no app, no sign-up,
-              no watermark.
+              Lưu video từ TikTok, YouTube, Instagram, Facebook, Twitter/X và CapCut chỉ với vài cú nhấp chuột. Dán
+              link, xem trước nội dung và tải video chất lượng gốc,
+              nhạc MP3 gốc hoặc từng hình ảnh từ bộ sưu tập ảnh.
+              Mọi thứ diễn ra ngay trong trình duyệt của bạn — không cần ứng dụng, không cần đăng ký,
+              không dính logo.
             </p>
           </div>
 
           <div className='grid md:grid-cols-3 gap-4'>
             <article className='bg-white/5 rounded-xl p-4 border border-white/10'>
-              <h3 className='text-white font-semibold mb-2'>🎬 Videos in HD</h3>
+              <h3 className='text-white font-semibold mb-2'>🎬 Video chất lượng HD</h3>
               <p className='text-sm'>
-                Watermark-free TikTok downloads and native Twitter/X video rips,
-                served with proper range requests so preview and seeking work
-                flawlessly.
+                Tải từ YouTube, TikTok, Instagram Reels, Facebook, Twitter/X và mẫu CapCut
+                — tất cả ở chất lượng HD và không có logo.
               </p>
             </article>
             <article className='bg-white/5 rounded-xl p-4 border border-white/10'>
               <h3 className='text-white font-semibold mb-2'>
-                🎵 MP3 audio extraction
+                🎵 Tách nhạc MP3
               </h3>
               <p className='text-sm'>
-                Pull the soundtrack from any TikTok video or slideshow. Photo
-                carousels keep the original background music — perfect for
-                trending sounds.
+                Lấy nhạc nền từ bất kỳ video hoặc slideshow nào. Bộ sưu tập ảnh
+                giữ nguyên nhạc nền gốc — hoàn hảo cho các âm thanh đang hot.
               </p>
             </article>
             <article className='bg-white/5 rounded-xl p-4 border border-white/10'>
               <h3 className='text-white font-semibold mb-2'>
-                🖼️ Photo carousels
+                🖼️ Bộ sưu tập ảnh
               </h3>
               <p className='text-sm'>
-                TikTok slideshows come through as a full-resolution gallery.
-                Preview, pick favorites, then save individually or as a single
-                ZIP.
+                Slideshow TikTok và Instagram được hiển thị dưới dạng thư viện ảnh độ phân giải cao.
+                Xem trước, chọn ảnh yêu thích, sau đó lưu riêng lẻ hoặc nén thành file ZIP.
               </p>
             </article>
           </div>
 
           <div>
             <h2 className='text-xl md:text-2xl font-bold text-white mb-3'>
-              Frequently asked questions
+              Câu hỏi thường gặp (FAQ)
             </h2>
             <Accordion
               type='single'
@@ -1138,45 +1161,56 @@ export default function Home() {
             >
               <AccordionItem value='faq-1'>
                 <AccordionTrigger>
-                  Is this TikTok downloader free?
+                  Công cụ tải này có miễn phí không?
                 </AccordionTrigger>
                 <AccordionContent>
-                  Yes — completely free, with no sign-up and no daily download
-                  limit.
+                  Có — hoàn toàn miễn phí, không cần đăng ký và không giới hạn lượt tải.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value='faq-2'>
                 <AccordionTrigger>
-                  Do downloaded TikTok videos have a watermark?
+                  Những nền tảng nào được hỗ trợ?
                 </AccordionTrigger>
                 <AccordionContent>
-                  No. Videos are saved in HD quality, free of the TikTok
-                  watermark.
+                  Chúng tôi hỗ trợ TikTok, YouTube (video &amp; shorts), Instagram (reels &amp; bài viết),
+                  Facebook (video &amp; reels), Twitter/X, và các mẫu CapCut.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value='faq-3'>
                 <AccordionTrigger>
-                  Can I download a TikTok photo carousel (slideshow)?
+                  Video tải về có bị dính logo không?
                 </AccordionTrigger>
                 <AccordionContent>
-                  Paste the slideshow URL. The app lists every image, the
-                  background track, and — when TikTok provides one — the full
-                  rendered slideshow video, so you can grab the photos, the MP3,
-                  or the MP4 in a single flow.
+                  Không. Video được lưu ở chất lượng HD, không dính logo/watermark bất cứ khi nào có thể.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value='faq-4'>
-                <AccordionTrigger>Does it work on Twitter/X?</AccordionTrigger>
+                <AccordionTrigger>
+                  Tôi có thể tải YouTube Shorts không?
+                </AccordionTrigger>
                 <AccordionContent>
-                  Yes — paste any twitter.com or x.com status URL and the tool
-                  resolves the underlying media automatically.
+                  Có! Chỉ cần dán link YouTube Shorts và công cụ sẽ tải về với chất lượng HD.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value='faq-5'>
+                <AccordionTrigger>
+                  Tôi có thể tải Instagram Reels không?
+                </AccordionTrigger>
+                <AccordionContent>
+                  Có — dán bất kỳ link Instagram Reel, bài viết hoặc story nào để tải video hoặc ảnh.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value='faq-6'>
+                <AccordionTrigger>Tôi có thể tải bộ sưu tập ảnh không?</AccordionTrigger>
+                <AccordionContent>
+                  Dán link slideshow. Ứng dụng sẽ liệt kê mọi hình ảnh, nhạc nền và — khi có sẵn — cả video slideshow đã dựng sẵn, vì vậy bạn có thể lấy ảnh, MP3 hoặc MP4 trong cùng một lần.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
           </div>
         </section>
         {/* Ad Banner - Bottom of Page */}
-        {/* <AdBanner slot='0987654321' format='auto' className='mt-6' /> */}
+        <AdBanner slot='0987654321' format='auto' className='mt-6' />
       </div>
 
       {lightboxIndex !== null && state.videoMetadata?.images && (

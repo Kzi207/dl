@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Invalid URL. Please paste a TikTok or Twitter/X link.',
+          error: 'Invalid URL. Please paste a TikTok, YouTube, Instagram, Facebook, Twitter/X, or CapCut link.',
         },
         { status: 400 },
       )

@@ -1,7 +1,12 @@
 import axios from 'axios'
 import * as cheerio from 'cheerio'
+import { exec } from 'child_process'
+import path from 'path'
+import { promisify } from 'util'
 import { VideoData, ImageData } from './types'
 import { parseVideoId, detectPlatform } from './validator'
+
+const execPromise = promisify(exec)
 
 export class Downloader {
   private readonly userAgent =
@@ -18,6 +23,43 @@ export class Downloader {
     'vp09', // VP8/VP9
     'av01', // AV1
   ]
+
+  private async tryYtdlpMethod(url: string): Promise<VideoData | null> {
+    try {
+      const binPath = path.join(process.cwd(), 'bin', 'yt-dlp.exe')
+      // --js-runtime node: helps with youtube decryption
+      // -f "best[ext=mp4][protocol^=http]/best[ext=mp4]/best": prefers progressive mp4 over https
+      const { stdout } = await execPromise(
+        `"${binPath}" -j -f "best[ext=mp4][protocol^=http]/best[ext=mp4]/best" --no-playlist --js-runtime node "${url}"`,
+      )
+      const data = JSON.parse(stdout)
+
+      // Sometimes data.url is missing but it's in the formats
+      let downloadUrl = data.url
+      if (!downloadUrl && data.formats && data.formats.length > 0) {
+        // Find the format that was actually selected (it usually has 'url')
+        // Or just take the last one which is usually the "best" one chosen
+        const bestFormat = data.formats[data.formats.length - 1]
+        downloadUrl = bestFormat.url
+      }
+
+      if (!downloadUrl) return null
+
+      return {
+        id: data.id || Date.now().toString(),
+        title: data.title || 'Video',
+        description: data.description || '',
+        url: url,
+        thumbnail: data.thumbnail || '',
+        duration: data.duration || 0,
+        author: data.uploader || data.uploader_id || 'Unknown',
+        downloadUrl: downloadUrl,
+      }
+    } catch (e) {
+      console.warn('yt-dlp method failed:', e)
+      return null
+    }
+  }
 
   // Public community cobalt instances — updated list
   private readonly cobaltInstances = [
@@ -39,6 +81,7 @@ export class Downloader {
     if (platform === 'twitter') {
       const methods = [
         () => this.tryVxTwitterMethod(url),
+        () => this.tryYtdlpMethod(url),
         () => this.tryCobaltInstances(url),
       ]
       for (const method of methods) {
@@ -54,7 +97,23 @@ export class Downloader {
       )
     }
 
-    throw new Error('Unsupported URL. Please use a TikTok or Twitter/X link.')
+    if (platform === 'youtube') {
+      return this.downloadYouTube(url)
+    }
+
+    if (platform === 'facebook') {
+      return this.downloadFacebook(url)
+    }
+
+    if (platform === 'instagram') {
+      return this.downloadInstagram(url)
+    }
+
+    if (platform === 'capcut') {
+      return this.downloadCapCut(url)
+    }
+
+    throw new Error('Unsupported URL. Please use a supported platform link.')
   }
 
   /**
@@ -89,14 +148,305 @@ export class Downloader {
     }
   }
 
+  // ─────────────────────────────── YouTube ───────────────────────────────
+  private async downloadYouTube(url: string): Promise<VideoData> {
+    const methods = [
+      () => this.tryYtdlpMethod(url),
+      () => this.tryCobaltInstances(url),
+      () => this.tryYouTubeOembed(url),
+    ]
+
+    for (const method of methods) {
+      try {
+        const result = await method()
+        if (result) return result
+      } catch (e) {
+        console.warn('YouTube method failed, trying next...', e)
+      }
+    }
+
+    throw new Error(
+      'Could not download YouTube content. The video may be private, age-restricted, or unavailable.',
+    )
+  }
+
+  // YouTube oEmbed: fetch metadata as fallback info
+  private async tryYouTubeOembed(url: string): Promise<VideoData | null> {
+    const oembedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`
+    const response = await axios.get(oembedUrl, {
+      headers: { 'User-Agent': this.userAgent },
+      timeout: 10000,
+    })
+
+    const data = response.data
+    const videoId = parseVideoId(url) || Date.now().toString()
+
+    // Try cobalt again with cleaned URL
+    const cleanUrl = `https://www.youtube.com/watch?v=${videoId}`
+    const cobaltResult = await this.tryCobaltInstances(cleanUrl)
+    if (cobaltResult) {
+      cobaltResult.title = data.title || cobaltResult.title
+      cobaltResult.author = data.author_name || cobaltResult.author
+      cobaltResult.thumbnail =
+        data.thumbnail_url || cobaltResult.thumbnail
+      return cobaltResult
+    }
+
+    return {
+      id: videoId,
+      title: data.title || 'YouTube Video',
+      url,
+      thumbnail: data.thumbnail_url || '',
+      duration: 0,
+      author: data.author_name || 'Unknown',
+      description: data.title || '',
+      downloadUrl: '',
+    }
+  }
+
+  // ─────────────────────────────── Facebook ───────────────────────────────
+  private async downloadFacebook(url: string): Promise<VideoData> {
+    const methods = [
+      () => this.tryYtdlpMethod(url),
+      () => this.tryCobaltInstances(url),
+      () => this.tryFBDownMethod(url),
+    ]
+
+    for (const method of methods) {
+      try {
+        const result = await method()
+        if (result) return result
+      } catch (e) {
+        console.warn('Facebook method failed, trying next...', e)
+      }
+    }
+
+    throw new Error(
+      'Could not download Facebook content. The video may be private or unavailable.',
+    )
+  }
+
+  // Facebook: try fbdown.net API approach
+  private async tryFBDownMethod(url: string): Promise<VideoData | null> {
+    try {
+      const response = await axios.post(
+        'https://fbdown.net/download.php',
+        new URLSearchParams({ URLz: url }),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': this.userAgent,
+            Referer: 'https://fbdown.net/',
+            Origin: 'https://fbdown.net',
+          },
+          timeout: 30000,
+        },
+      )
+
+      if (response.data && typeof response.data === 'string') {
+        const $ = cheerio.load(response.data)
+
+        // Look for HD and SD download links
+        const hdLink = $('a#hdlink').attr('href') || ''
+        const sdLink = $('a#sdlink').attr('href') || ''
+        const downloadUrl = hdLink || sdLink
+
+        if (downloadUrl) {
+          const videoId = parseVideoId(url) || Date.now().toString()
+          return {
+            id: videoId,
+            title: 'Facebook Video',
+            url,
+            thumbnail: '',
+            duration: 0,
+            author: 'Facebook User',
+            description: 'Downloaded from Facebook',
+            downloadUrl,
+          }
+        }
+      }
+    } catch (e) {
+      throw new Error(`FBDown method failed: ${e instanceof Error ? e.message : e}`)
+    }
+    return null
+  }
+
+  // ─────────────────────────────── Instagram ───────────────────────────────
+  private async downloadInstagram(url: string): Promise<VideoData> {
+    const methods = [
+      () => this.tryYtdlpMethod(url),
+      () => this.tryCobaltInstances(url),
+      () => this.tryIGramMethod(url),
+    ]
+
+    for (const method of methods) {
+      try {
+        const result = await method()
+        if (result) return result
+      } catch (e) {
+        console.warn('Instagram method failed, trying next...', e)
+      }
+    }
+
+    throw new Error(
+      'Could not download Instagram content. The post may be private or unavailable.',
+    )
+  }
+
+  // Instagram: try igram.world API approach
+  private async tryIGramMethod(url: string): Promise<VideoData | null> {
+    try {
+      const response = await axios.post(
+        'https://api.igram.world/api/convert',
+        {
+          url: url,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': this.userAgent,
+            Accept: 'application/json',
+            Origin: 'https://igram.world',
+            Referer: 'https://igram.world/',
+          },
+          timeout: 30000,
+        },
+      )
+
+      const data = response.data
+      if (data && Array.isArray(data) && data.length > 0) {
+        const videoId = parseVideoId(url) || Date.now().toString()
+        const videos = data.filter(
+          (item: { type?: string }) => item.type === 'video',
+        )
+        const photos = data.filter(
+          (item: { type?: string }) => item.type === 'image' || item.type === 'photo',
+        )
+
+        const downloadUrl = videos[0]?.url || data[0]?.url || ''
+
+        const images: ImageData[] = photos.map(
+          (img: { url: string }, i: number) => ({
+            id: `ig_img_${i}`,
+            url: img.url,
+            thumbnail: img.url,
+          }),
+        )
+
+        return {
+          id: videoId,
+          title: 'Instagram Content',
+          url,
+          thumbnail: '',
+          duration: 0,
+          author: 'Instagram User',
+          description: 'Downloaded from Instagram',
+          downloadUrl,
+          images: images.length > 0 ? images : undefined,
+          isPhotoCarousel: images.length > 0 && !videos.length,
+        }
+      }
+    } catch (e) {
+      throw new Error(`IGram method failed: ${e instanceof Error ? e.message : e}`)
+    }
+    return null
+  }
+
+  // ─────────────────────────────── CapCut ───────────────────────────────
+  private async downloadCapCut(url: string): Promise<VideoData> {
+    const methods = [
+      () => this.tryYtdlpMethod(url),
+      () => this.tryCobaltInstances(url),
+      () => this.tryCapCutDirect(url),
+    ]
+
+    for (const method of methods) {
+      try {
+        const result = await method()
+        if (result) return result
+      } catch (e) {
+        console.warn('CapCut method failed, trying next...', e)
+      }
+    }
+
+    throw new Error(
+      'Could not download CapCut content. The template may be private or unavailable.',
+    )
+  }
+
+  // CapCut: try direct scraping
+  private async tryCapCutDirect(url: string): Promise<VideoData | null> {
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          'User-Agent': this.userAgent,
+          Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        },
+        timeout: 30000,
+        maxRedirects: 5,
+      })
+
+      if (response.data && typeof response.data === 'string') {
+        const $ = cheerio.load(response.data)
+
+        // Try to find video URL from meta tags
+        const ogVideo =
+          $('meta[property="og:video"]').attr('content') ||
+          $('meta[property="og:video:url"]').attr('content') ||
+          $('meta[property="og:video:secure_url"]').attr('content') ||
+          ''
+
+        const ogTitle = $('meta[property="og:title"]').attr('content') || 'CapCut Video'
+        const ogImage = $('meta[property="og:image"]').attr('content') || ''
+        const ogDescription = $('meta[property="og:description"]').attr('content') || ''
+
+        // Also try to find video URL in script tags
+        let videoUrl = ogVideo
+        if (!videoUrl) {
+          const scripts = $('script').toArray()
+          for (const script of scripts) {
+            const content = $(script).html()
+            if (content && (content.includes('videoUrl') || content.includes('video_url'))) {
+              const urlMatch = content.match(/"(?:videoUrl|video_url)"\s*:\s*"([^"]+)"/)
+              if (urlMatch) {
+                videoUrl = urlMatch[1].replace(/\\u002F/g, '/')
+                break
+              }
+            }
+          }
+        }
+
+        if (videoUrl) {
+          const videoId = parseVideoId(url) || Date.now().toString()
+          return {
+            id: videoId,
+            title: ogTitle,
+            url,
+            thumbnail: ogImage,
+            duration: 0,
+            author: 'CapCut User',
+            description: ogDescription,
+            downloadUrl: videoUrl,
+          }
+        }
+      }
+    } catch (e) {
+      throw new Error(`CapCut direct method failed: ${e instanceof Error ? e.message : e}`)
+    }
+    return null
+  }
+
+  // ─────────────────────────────── TikTok ───────────────────────────────
+
   private async downloadTikTok(url: string): Promise<VideoData> {
     const videoId = parseVideoId(url)
     if (!videoId) {
       throw new Error('Could not extract video ID from URL')
     }
 
-    // tikwm is the most reliable — try it first, then fall back to the others
+    // tryYtdlpMethod is very robust for TikTok too
     const methods = [
+      () => this.tryYtdlpMethod(url),
       () => this.tryTikwmMethod(url),
       () => this.trySnaptikMethod(url),
       () => this.trySSSMethod(url),
@@ -120,6 +470,8 @@ export class Downloader {
       'All download methods failed. TikTok might be blocking requests or the video is private.',
     )
   }
+
+  // ─────────────────────────────── Cobalt (universal) ───────────────────────────────
 
   // Try every public cobalt instance in order
   private async tryCobaltInstances(url: string): Promise<VideoData | null> {
@@ -209,6 +561,8 @@ export class Downloader {
     return null
   }
 
+  // ─────────────────────────────── Twitter/X ───────────────────────────────
+
   // Twitter/X: use vxtwitter API (open source, no auth required)
   private async tryVxTwitterMethod(url: string): Promise<VideoData | null> {
     // Extract username and tweet ID from URL
@@ -268,6 +622,8 @@ export class Downloader {
       isPhotoCarousel: images.length > 0 && !videoItem,
     }
   }
+
+  // ─────────────────────────────── TikTok methods ───────────────────────────────
 
   private async trySnaptikMethod(url: string): Promise<VideoData | null> {
     try {

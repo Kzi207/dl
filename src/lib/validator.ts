@@ -1,4 +1,4 @@
-export type SupportedPlatform = 'tiktok' | 'twitter' | 'unknown'
+export type SupportedPlatform = 'tiktok' | 'twitter' | 'youtube' | 'facebook' | 'instagram' | 'capcut' | 'unknown'
 
 const platformPatterns: Record<
   Exclude<SupportedPlatform, 'unknown'>,
@@ -15,6 +15,35 @@ const platformPatterns: Record<
   twitter: [
     /^(https?:\/\/)?(www\.)?(twitter|x)\.com\/[\w]+\/status\/\d+/,
     /^(https?:\/\/)?t\.co\/[\w\d]+/,
+  ],
+  youtube: [
+    /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\//,
+    /^(https?:\/\/)?(www\.)?youtube\.com\/watch\?v=[\w-]+/,
+    /^(https?:\/\/)?(www\.)?youtube\.com\/shorts\/[\w-]+/,
+    /^(https?:\/\/)?(www\.)?youtube\.com\/embed\/[\w-]+/,
+    /^(https?:\/\/)?youtu\.be\/[\w-]+/,
+    /^(https?:\/\/)?m\.youtube\.com\/watch\?v=[\w-]+/,
+    /^(https?:\/\/)?music\.youtube\.com\/watch\?v=[\w-]+/,
+  ],
+  facebook: [
+    /^(https?:\/\/)?(www\.|m\.|web\.)?facebook\.com\/.+\/videos\//,
+    /^(https?:\/\/)?(www\.|m\.|web\.)?facebook\.com\/watch\//,
+    /^(https?:\/\/)?(www\.|m\.|web\.)?facebook\.com\/reel\//,
+    /^(https?:\/\/)?(www\.|m\.|web\.)?facebook\.com\/.+\/posts\//,
+    /^(https?:\/\/)?(www\.|m\.|web\.)?facebook\.com\/share\//,
+    /^(https?:\/\/)?fb\.watch\/[\w\d-]+/,
+    /^(https?:\/\/)?(www\.|m\.)?facebook\.com\/[\w.]+\/videos\/\d+/,
+  ],
+  instagram: [
+    /^(https?:\/\/)?(www\.)?instagram\.com\/p\/[\w-]+/,
+    /^(https?:\/\/)?(www\.)?instagram\.com\/reel\/[\w-]+/,
+    /^(https?:\/\/)?(www\.)?instagram\.com\/reels\/[\w-]+/,
+    /^(https?:\/\/)?(www\.)?instagram\.com\/tv\/[\w-]+/,
+    /^(https?:\/\/)?(www\.)?instagram\.com\/stories\/[\w.-]+\/\d+/,
+  ],
+  capcut: [
+    /^(https?:\/\/)?(www\.)?capcut\.com\/t\/[\w-]+/,
+    /^(https?:\/\/)?(www\.)?capcut\.com\/[\w-]+\/[\w-]+/,
   ],
 }
 
@@ -43,9 +72,15 @@ export function parseVideoId(url: string): string | null {
     /\/status\/(\d+)/,
     /\/p\/([\w-]+)/,
     /\/reel\/([\w-]+)/,
+    /\/reels\/([\w-]+)/,
     /\/videos\/(\d+)/,
-    /v=(\d+)/,
+    /v=([\w-]+)/,
     /fb\.watch\/([\w\d-]+)/,
+    /youtu\.be\/([\w-]+)/,
+    /\/shorts\/([\w-]+)/,
+    /\/embed\/([\w-]+)/,
+    /\/watch\/(\d+)/,
+    /\/tv\/([\w-]+)/,
   ]
 
   for (const pattern of patterns) {
@@ -56,4 +91,17 @@ export function parseVideoId(url: string): string | null {
   }
 
   return null
+}
+
+export function getPlatformLabel(platform: SupportedPlatform): string {
+  const labels: Record<SupportedPlatform, string> = {
+    tiktok: 'TikTok',
+    twitter: 'Twitter/X',
+    youtube: 'YouTube',
+    facebook: 'Facebook',
+    instagram: 'Instagram',
+    capcut: 'CapCut',
+    unknown: 'Unknown',
+  }
+  return labels[platform]
 }

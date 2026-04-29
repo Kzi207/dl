@@ -110,19 +110,23 @@ const structuredData = {
       operatingSystem: 'Any',
       browserRequirements: 'Requires JavaScript. Requires HTML5.',
       isAccessibleForFree: true,
-      inLanguage: 'en',
+      inLanguage: 'vi',
       offers: {
         '@type': 'Offer',
         price: '0',
-        priceCurrency: 'USD',
+        priceCurrency: 'VND',
       },
       featureList: [
-        'Download TikTok videos without watermark',
-        'Download Twitter/X videos in HD',
-        'Extract MP3 audio from TikTok videos',
-        'Download TikTok slideshows (photo carousels) with original music',
-        'Preview video and images before downloading',
-        'Save images individually or as a ZIP archive',
+        'Tải video TikTok không logo/watermark',
+        'Tải video YouTube và Shorts chất lượng HD',
+        'Tải Instagram Reels, bài viết và tin (stories)',
+        'Tải video và reels từ Facebook',
+        'Tải video Twitter/X chất lượng HD',
+        'Tải mẫu template CapCut',
+        'Tách nhạc MP3 từ video',
+        'Tải slideshow (photo carousels) kèm nhạc gốc',
+        'Xem trước video và ảnh trước khi tải',
+        'Lưu ảnh riêng lẻ hoặc nén thành file ZIP',
       ],
       screenshot: siteConfig.ogImage,
       author: {
@@ -144,34 +148,50 @@ const structuredData = {
       mainEntity: [
         {
           '@type': 'Question',
-          name: 'Is this TikTok downloader free?',
+          name: 'Công cụ này có miễn phí không?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes. The tool is free, requires no sign-up, and has no daily download limit.',
+            text: 'Có. Công cụ này hoàn toàn miễn phí, không cần đăng ký và không giới hạn lượt tải hàng ngày.',
           },
         },
         {
           '@type': 'Question',
-          name: 'Do downloaded TikTok videos have a watermark?',
+          name: 'Hỗ trợ những nền tảng nào?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'No. Videos are saved in HD quality without the TikTok watermark.',
+            text: 'TikTok, YouTube (video & shorts), Instagram (reels & bài viết), Facebook (video & reels), Twitter/X, và CapCut.',
           },
         },
         {
           '@type': 'Question',
-          name: 'Can I download a TikTok photo carousel (slideshow)?',
+          name: 'Video tải về có bị dính logo không?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes. Paste the slideshow URL and the app shows every image plus the original background music — download them individually, as a ZIP, or save the audio as an MP3.',
+            text: 'Không. Video được lưu ở chất lượng HD và không có logo/watermark.',
           },
         },
         {
           '@type': 'Question',
-          name: 'Does it support Twitter/X videos?',
+          name: 'Tôi có thể tải YouTube Shorts không?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes. Paste any twitter.com or x.com status URL and the tool will extract the video for preview and download.',
+            text: 'Có! Chỉ cần dán link YouTube Shorts và công cụ sẽ tải về với chất lượng HD.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Tôi có thể tải Instagram Reels không?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Có. Dán link Instagram Reels, bài viết hoặc story để tải video hoặc ảnh.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Tôi có thể tải bộ sưu tập ảnh (photo carousel) không?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Có. Dán link slideshow và ứng dụng sẽ hiển thị từng ảnh kèm nhạc nền gốc — bạn có thể tải từng ảnh, nén ZIP hoặc lưu nhạc MP3.',
           },
         },
       ],
@@ -185,7 +205,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en'>
+    <html lang='vi'>
       <head>
         <link rel='icon' href='/favicon.svg' type='image/svg+xml' />
         <link rel='icon' href='/favicon.ico' sizes='32x32' />
@@ -207,12 +227,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Script
-          async
-          src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3842960431278714'
-          crossOrigin='anonymous'
-          strategy='afterInteractive'
-        />
+        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+            crossOrigin='anonymous'
+            strategy='afterInteractive'
+          />
+        )}
         {children}
         <Analytics />
       </body>
