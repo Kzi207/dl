@@ -1,6 +1,7 @@
 'use client'
 
 import { useReducer, useRef, useState } from 'react'
+import Image from 'next/image'
 import { appReducer, initialState } from '@/lib/appReducer'
 import {
   TikTokIcon,
@@ -636,13 +637,13 @@ export default function Home() {
               <div className='p-4 bg-white/10 rounded-xl border border-white/20 space-y-4'>
                 <div className='flex items-start space-x-3'>
                   {state.videoMetadata.thumbnail && (
-                    <img
+                    <Image
                       src={state.videoMetadata.thumbnail}
                       alt='Video thumbnail'
+                      width={80}
+                      height={80}
                       className='w-16 h-16 md:w-20 md:h-20 rounded-lg object-cover flex-shrink-0'
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none'
-                      }}
+                      unoptimized
                     />
                   )}
                   <div className='flex-1 min-w-0'>
@@ -834,15 +835,13 @@ export default function Home() {
                                   className='block w-full cursor-zoom-in'
                                   aria-label={`Open image ${index + 1} full size`}
                                 >
-                                  <img
+                                  <Image
                                     src={image.thumbnail}
                                     alt={`Slideshow image ${index + 1}`}
+                                    width={200}
+                                    height={200}
                                     className='w-full h-24 md:h-32 object-cover transition-transform duration-200 group-hover:scale-105'
-                                    loading='lazy'
-                                    onError={(e) => {
-                                      e.currentTarget.src =
-                                        getImagePlaceholderBase64()
-                                    }}
+                                    unoptimized
                                   />
                                 </button>
 

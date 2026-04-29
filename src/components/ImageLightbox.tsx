@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useCallback } from 'react'
+import Image from 'next/image'
 import { DownloadIcon } from './icons'
 
 interface LightboxImage {
@@ -112,10 +113,13 @@ export function ImageLightbox({
         className='flex flex-col items-center gap-4 max-h-full max-w-full'
         onClick={(e) => e.stopPropagation()}
       >
-        <img
+        <Image
           src={current.url}
           alt={`Slide ${activeIndex + 1} of ${images.length}`}
+          width={1200}
+          height={800}
           className='max-h-[80vh] max-w-full object-contain rounded-lg shadow-2xl'
+          unoptimized
         />
 
         <div className='flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-full px-4 py-2'>
