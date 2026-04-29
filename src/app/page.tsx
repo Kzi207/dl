@@ -15,7 +15,6 @@ import {
   DownloadIcon,
   MusicIcon,
   CheckIcon,
-  getImagePlaceholderBase64,
 } from '@/components/icons'
 import { AdBanner } from '@/components/AdBanner'
 import { ImageLightbox } from '@/components/ImageLightbox'
