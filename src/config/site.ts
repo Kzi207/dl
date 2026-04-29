@@ -1,7 +1,7 @@
 export type SiteConfig = typeof siteConfig
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.mohamedgado.site'
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://khanhduy.id.vn'
 
 export const siteConfig = {
   name: 'Trình Tải Video Đa Nền Tảng',
