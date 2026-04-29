@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Downloader } from '../../../lib/downloader'
-import { validateUrl, detectPlatform } from '../../../lib/validator'
+import { Downloader } from '@/lib/downloader'
+import { validateUrl, detectPlatform } from '@/lib/validator'
 
 export async function POST(request: NextRequest) {
   try {
