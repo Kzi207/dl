@@ -35,10 +35,10 @@ export function AdBanner({
   if (!clientId) return null
 
   return (
-    <div className={className}>
+    <div className={`${className} overflow-hidden bg-transparent`}>
       <ins
         className='adsbygoogle'
-        style={{ display: 'block' }}
+        style={{ display: 'block', background: 'transparent' }}
         data-ad-client={clientId}
         data-ad-slot={slot}
         data-ad-format={format}
