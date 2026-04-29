@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 declare global {
   interface Window {
@@ -22,11 +22,13 @@ export function AdBanner({
   className = '',
 }: AdBannerProps) {
   const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
+  const pushedRef = useRef(false)
 
   useEffect(() => {
-    if (!clientId) return
+    if (!clientId || pushedRef.current) return
     try {
       ;(window.adsbygoogle = window.adsbygoogle || []).push({})
+      pushedRef.current = true
     } catch (err) {
       console.error('AdSense error:', err)
     }
