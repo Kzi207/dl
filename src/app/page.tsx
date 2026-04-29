@@ -482,50 +482,34 @@ export default function Home() {
               {state.loading ? (
                 <>
                   <SpinnerIcon className='-ml-1 mr-3 h-4 w-4 md:h-5 md:w-5 text-white' />
-                  Processing...
+                  Đang xử lý...
                 </>
               ) : (
-                <>Process URL</>
+                <>Xử lý Link</>
               )}
             </button>{' '}
             {/* Features List - Hidden on mobile, shown on desktop */}
             <div className='hidden lg:block bg-white/5 rounded-xl p-4 mt-6 border border-white/10'>
               <h3 className='text-white font-semibold mb-4 text-sm md:text-base flex items-center'>
-                ✨ Features
+                ✨ Tính năng nổi bật
                 <div className='ml-2 w-8 h-0.5 bg-gradient-to-r from-pink-500 to-violet-500 rounded'></div>
               </h3>
               <div className='grid grid-cols-1 xl:grid-cols-2 gap-3 text-xs md:text-sm'>
                 <div className='flex items-center space-x-2 text-white/70 hover:text-white/90 transition-colors'>
                   <div className='w-2 h-2 bg-green-400 rounded-full'></div>
-                  <span>Watermark-free downloads</span>
+                  <span>Tải video không logo/watermark</span>
                 </div>
                 <div className='flex items-center space-x-2 text-white/70 hover:text-white/90 transition-colors'>
                   <div className='w-2 h-2 bg-blue-400 rounded-full'></div>
-                  <span>HD quality preservation</span>
+                  <span>Nhạc MP3 chất lượng cao</span>
                 </div>
                 <div className='flex items-center space-x-2 text-white/70 hover:text-white/90 transition-colors'>
                   <div className='w-2 h-2 bg-purple-400 rounded-full'></div>
-                  <span>MP3 audio extraction</span>
+                  <span>Tải ảnh Slide/Carousel TikTok</span>
                 </div>
                 <div className='flex items-center space-x-2 text-white/70 hover:text-white/90 transition-colors'>
                   <div className='w-2 h-2 bg-pink-400 rounded-full'></div>
-                  <span>Video preview</span>
-                </div>
-                <div className='flex items-center space-x-2 text-white/70 hover:text-white/90 transition-colors'>
-                  <div className='w-2 h-2 bg-yellow-400 rounded-full'></div>
-                  <span>Image gallery downloads</span>
-                </div>
-                <div className='flex items-center space-x-2 text-white/70 hover:text-white/90 transition-colors'>
-                  <div className='w-2 h-2 bg-indigo-400 rounded-full'></div>
-                  <span>Multiple URL formats</span>
-                </div>
-                <div className='flex items-center space-x-2 text-white/70 hover:text-white/90 transition-colors'>
-                  <div className='w-2 h-2 bg-teal-400 rounded-full'></div>
-                  <span>Batch image selection</span>
-                </div>
-                <div className='flex items-center space-x-2 text-white/70 hover:text-white/90 transition-colors'>
-                  <div className='w-2 h-2 bg-orange-400 rounded-full'></div>
-                  <span>Fast processing</span>
+                  <span>Hỗ trợ đa nền tảng (YT, FB, IG,...)</span>
                 </div>
               </div>
             </div>
