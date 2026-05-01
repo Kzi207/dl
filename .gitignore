@@ -5,3 +5,6 @@ dist
 *.log
 bin/*.exe
 next-backup
+cookies.txt
+*.cookies
+*.session
